@@ -31,7 +31,6 @@ const HomeSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: "Users",
-    unique: true,
   },
   created: {
     type: Date,

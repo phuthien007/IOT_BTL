@@ -1,6 +1,8 @@
 // Path: app\models\user.server.model.js
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const UserSchema = new Schema({
   username: {
@@ -38,7 +40,6 @@ const UserSchema = new Schema({
   home: {
     type: Schema.Types.ObjectId,
     ref: "Homes",
-    unique: true,
   },
 });
 

@@ -57,7 +57,7 @@ router.post("/signup", register);
 router.get("/me", checkLogin, loadCurrentUser);
 
 // setup endpoint get all user
-router.get("/", async (req, res) => {
+router.get("/", checkLogin, async (req, res) => {
   try {
     const users = await UserModel.find();
     res.json(users);
@@ -67,12 +67,12 @@ router.get("/", async (req, res) => {
 });
 
 // setup endpoint get user by id
-router.get("/:id", getUser, (req, res) => {
+router.get("/:id", checkLogin, getUser, (req, res) => {
   res.json(res.user);
 });
 
 // setup endpoint create user
-router.post("/", async (req, res) => {
+router.post("/", checkLogin, async (req, res) => {
   const user = new UserModel(req.body);
   try {
     const newUser = await user.save();
@@ -83,7 +83,7 @@ router.post("/", async (req, res) => {
 });
 
 // setup endpoint update user
-router.patch("/:id", getUser, async (req, res) => {
+router.patch("/:id", checkLogin, getUser, async (req, res) => {
   if (req.body.name != null) {
     res.user.name = req.body.name;
   }
@@ -102,7 +102,7 @@ router.patch("/:id", getUser, async (req, res) => {
 });
 
 // setup endpoint delete user
-router.delete("/:id", getUser, async (req, res) => {
+router.delete("/:id", checkLogin, getUser, async (req, res) => {
   try {
     await res.user.remove();
     res.json({ message: "Deleted User" });
