@@ -9,7 +9,8 @@ var app = express();
 db();
 dotenv.config();
 var port = process.env.PORT || 3000;
-
+// use the express-static middleware
+app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
