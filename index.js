@@ -17,10 +17,10 @@ app.use(express.urlencoded({ extended: false }));
 // Set up the view engine
 app.set("view engine", "ejs");
 
-// Set up the routes
-app.get("/", function (req, res) {
-  res.render("index");
-});
+// // Set up the routes
+// app.get("/", function (req, res) {
+//   res.render("index");
+// });
 app.use("/api", router);
 
 // Start the server
