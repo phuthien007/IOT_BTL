@@ -1,8 +1,60 @@
 // router user
 const express = require("express");
 const UserModel = require("../models/user.server.model");
+const { checkLogin } = require("../middlewares");
 
 const router = express.Router();
+
+const login = async (req, res) => {
+  try {
+    const user = await UserModel.findOne({ username: req.body.username });
+    if (user == null) {
+      return res.status(400).json({ message: "Cannot find user" });
+    }
+    user.comparePassword(req.body.password, (err, isMatch) => {
+      if (err) {
+        return res.status(400).json({ message: err });
+      }
+
+      if (isMatch) {
+        return res.status(200).json({
+          message: "Login successfully",
+          accessToken: user.generateAuthToken(),
+        });
+      }
+      return res.status(400).json({ message: "Wrong password" });
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+const register = async (req, res) => {
+  const user = new UserModel(req.body);
+  try {
+    const newUser = await user.save();
+    res.status(201).json(newUser);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
+const loadCurrentUser = async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.user._id).select("-password");
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// login
+router.post("/login", login);
+
+// setup endpoint create user
+router.post("/signup", register);
+// load current user
+router.get("/me", checkLogin, loadCurrentUser);
 
 // setup endpoint get all user
 router.get("/", async (req, res) => {
