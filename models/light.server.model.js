@@ -23,7 +23,7 @@ const Light = new Schema({
   },
   room: {
     type: Schema.Types.ObjectId,
-    ref: "Rooms",
+    ref: "rooms",
   },
 
   // nameLight: String,

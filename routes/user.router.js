@@ -1,6 +1,7 @@
 // router user
 const express = require("express");
 const UserModel = require("../models/user.server.model");
+const HomeModel = require("../models/home.server.model");
 const { checkLogin } = require("../middlewares");
 
 const router = express.Router();
@@ -31,9 +32,19 @@ const login = async (req, res) => {
 
 const register = async (req, res) => {
   const user = new UserModel(req.body);
+
   try {
-    const newUser = await user.save();
-    res.status(201).json(newUser);
+    if (res.home != null) {
+      if (res.home.statusRegister === true) {
+        res.status(400).json({ message: "Nhà đã được đăng ký tài khoản" });
+      }
+    } else {
+      const newUser = await user.save();
+      res.home.statusRegister = true;
+      res.home.save();
+      res.home = null;
+      res.status(201).json(newUser);
+    }
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -52,7 +63,7 @@ const loadCurrentUser = async (req, res) => {
 router.post("/login", login);
 
 // setup endpoint create user
-router.post("/signup", register);
+router.post("/signup", getHome, register);
 // load current user
 router.get("/me", checkLogin, loadCurrentUser);
 
@@ -123,6 +134,23 @@ async function getUser(req, res, next) {
     return res.status(500).json({ message: err.message });
   }
   res.user = user;
+  next();
+}
+
+// middleware get home by id
+async function getHome(req, res, next) {
+  let home;
+  try {
+    if (req.body.home) {
+      home = await HomeModel.findById(req.body.home);
+      if (home == null) {
+        return res.status(404).json({ message: "Cannot find home" });
+      }
+    }
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+  res.home = home;
   next();
 }
 

@@ -44,6 +44,12 @@ router.patch("/:id", getHome, async (req, res) => {
   if (req.body.address != null) {
     res.home.address = req.body.address;
   }
+  if (req.body.statusRegister != null) {
+    res.home.statusRegister = req.body.statusRegister;
+  }
+  if (req.body.statusUse != null) {
+    res.home.statusUse = req.body.statusUse;
+  }
   try {
     const updatedHome = await res.home.save();
     res.json(updatedHome);
