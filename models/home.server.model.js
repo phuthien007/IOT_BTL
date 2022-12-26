@@ -11,6 +11,14 @@ const HomeSchema = new Schema({
     type: String,
     trim: true,
   },
+  statusRegister: {
+    type: Boolean,
+    default: false,
+  },
+  statusUse: {
+    type: Boolean,
+    default: false,
+  },
   address: {
     type: String,
     required: true,
@@ -25,12 +33,12 @@ const HomeSchema = new Schema({
   rooms: [
     {
       type: Schema.Types.ObjectId,
-      ref: "Rooms",
+      ref: "rooms",
     },
   ],
   user: {
     type: Schema.Types.ObjectId,
-    ref: "Users",
+    ref: "users",
   },
   created: {
     type: Date,

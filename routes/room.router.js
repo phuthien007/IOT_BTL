@@ -40,6 +40,9 @@ router.patch("/:id", getRoom, async (req, res) => {
   if (req.body.desc != null) {
     res.room.desc = req.body.desc;
   }
+  if (req.body.type != null) {
+    res.body.type = req.body.type;
+  }
   try {
     const updatedRoom = await res.room.save();
     res.json(updatedRoom);

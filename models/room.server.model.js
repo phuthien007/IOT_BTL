@@ -9,7 +9,10 @@ const Room = new Schema({
   },
   home: {
     type: Schema.Types.ObjectId,
-    ref: "Homes",
+    ref: "homes",
+  },
+  type: {
+    type: String,
   },
   desc: {
     type: String,
@@ -17,12 +20,12 @@ const Room = new Schema({
   },
   airTemp: {
     type: Schema.Types.ObjectId,
-    ref: "Airs",
+    ref: "airs",
   },
   lights: [
     {
       type: Schema.Types.ObjectId,
-      ref: "Lights",
+      ref: "lights",
     },
   ],
 });

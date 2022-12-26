@@ -39,7 +39,7 @@ const UserSchema = new Schema({
   // foreign key home
   home: {
     type: Schema.Types.ObjectId,
-    ref: "Homes",
+    ref: "homes",
   },
 });
 
