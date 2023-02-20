@@ -1,6 +1,7 @@
 // setup router
 const express = require("express");
 const { checkLogin } = require("../middlewares/index.js");
+const airModel = require("../models/air.server.model.js");
 const router = express.Router();
 
 // api comiple code
