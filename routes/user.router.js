@@ -3,28 +3,53 @@ const express = require("express");
 const UserModel = require("../models/user.server.model");
 const HomeModel = require("../models/home.server.model");
 const { checkLogin } = require("../middlewares");
+const { compare } = require('bcryptjs');
+const createError = require('http-errors');
+const bcrypt = require("bcryptjs");
 
 const router = express.Router();
 
 const login = async (req, res) => {
   try {
-    const user = await UserModel.findOne({ username: req.body.username });
+    const uname = req.body.username;
+    const pass = req.body.password;
+    const user = await UserModel.findOne({ 
+      where: {
+        username: uname,
+      },
+      raw: true,
+    });
     if (user == null) {
       return res.status(400).json({ message: "Cannot find user" });
     }
-    user.comparePassword(req.body.password, (err, isMatch) => {
-      if (err) {
-        return res.status(400).json({ message: err });
-      }
+    // user.comparePassword(req.body.password, user.password, (err, isMatch) => {
+    //   if (err) {
+    //     return res.status(400).json({ message: err });
+    //   }
 
-      if (isMatch) {
-        return res.status(200).json({
-          message: "Login successfully",
-          accessToken: user.generateAuthToken(),
-        });
-      }
-      return res.status(400).json({ message: "Wrong password" });
+    //   if (isMatch) {
+    //     return res.status(200).json({
+    //       message: "Login successfully",
+    //       accessToken: user.generateAuthToken(),
+    //     });
+    //   }
+    //   return res.status(400).json({ message: req.body.password });
+    // });
+    const isCorrectPassword = await compare(pass, user.password);
+    if (!isCorrectPassword) {
+      
+      console.log(isCorrectPassword);
+    }
+    const token = user.generateAuthToken();
+    return res.json({
+        message: 'Login successfully as admin',
+        data: {
+            user,
+            password: null,
+            token: token,
+        },
     });
+
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

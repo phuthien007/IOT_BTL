@@ -65,14 +65,25 @@ UserSchema.statics.authenticate = function (username, password, callback) {
 };
 
 // comparePassword
-UserSchema.methods.comparePassword = function (password, callback) {
+// UserSchema.methods.comparePassword = function (password, callback) {
+//   console.log("comparePassword");
+//   bcrypt.compare(password, this.password, function (err, isMatch) {
+//     if (err) {
+//       return callback(err);
+//     }
+//     callback(null, isMatch);
+//   });
+// };
+
+UserSchema.methods.comparePassword = function (password, hash, callback) {
   console.log("comparePassword");
-  bcrypt.compare(password, this.password, function (err, isMatch) {
+  bcrypt.compare(password, hash, function (err, isMatch) {
     if (err) {
       return callback(err);
     }
     callback(null, isMatch);
   });
+  console.log("donecomp");
 };
 
 // hash password before saving to database
