@@ -11,5 +11,5 @@ router.use("/home", checkLogin, require("./home.router.js"));
 router.use("/room", checkLogin, require("./room.router.js"));
 router.use("/light", checkLogin, require("./light.router.js"));
 router.use("/air", checkLogin, require("./air.router.js"));
-
+router.use("/adruino", require("./adruino.router.js"));
 module.exports = router;
