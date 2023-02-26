@@ -5,6 +5,7 @@ const db = require("./database");
 const router = require("./routes");
 const logger = require("./config/logger");
 const dotenv = require("dotenv");
+require("./mqtt");
 var app = express();
 db();
 dotenv.config();
