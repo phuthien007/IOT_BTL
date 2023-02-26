@@ -17,8 +17,10 @@ router.get("/", async (req, res) => {
 });
 
 // setup endpoint get room by id
-router.get("/:id", getRoom, (req, res) => {
-  res.json(res.room);
+router.get("/:id",getAirbyRoom, getLightbyRoom, (req, res) => {
+  res.json(res.air);
+  res.json(res.light);
+  
 });
 
 // setup endpoint create room
@@ -52,9 +54,12 @@ router.patch("/:id", getRoom, async (req, res) => {
 });
 
 // setup endpoint delete room
-router.delete("/:id", getRoom, async (req, res) => {
+router.delete("/:id", getRoom, getAirbyRoom, async (req, res) => {
   try {
-    await res.room.remove();
+    // await res.light.remove();
+    
+    await res.air.remove();
+    // await res.room.remove();
     res.json({ message: "Deleted Room" });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -179,6 +184,36 @@ async function getRoom(req, res, next) {
     return res.status(500).json({ message: err.message });
   }
   res.room = room;
+  next();
+}
+
+async function getLightbyRoom(req, res, next) {
+  let light;
+  let room;
+  try {
+    light = await LightModel.findOne({room: req.params.id});
+    if (light == null) {
+      return res.status(404).json({ message: "Cannot find light" });
+    }
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+  res.light = light;
+  next();
+}
+
+async function getAirbyRoom(req, res, next) {
+  let air;
+  let room = req.body.id;
+  try {
+    air = await AirModel.findOne({room: req.params.id});
+    if (air == null) {
+      return res.status(404).json({ message: "Cannot find air" });
+    }
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+  res.air = air;
   next();
 }
 
