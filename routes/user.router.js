@@ -6,6 +6,7 @@ const { checkLogin } = require("../middlewares");
 const { compare } = require('bcryptjs');
 const createError = require('http-errors');
 const bcrypt = require("bcryptjs");
+const { Console } = require("console");
 
 const router = express.Router();
 
@@ -14,10 +15,7 @@ const login = async (req, res) => {
     const uname = req.body.username;
     const pass = req.body.password;
     const user = await UserModel.findOne({ 
-      where: {
         username: uname,
-      },
-      raw: true,
     });
     if (user == null) {
       return res.status(400).json({ message: "Cannot find user" });
@@ -39,6 +37,7 @@ const login = async (req, res) => {
     if (!isCorrectPassword) {
       
       console.log(isCorrectPassword);
+      return res.status(400).json({message: "Wrong password"});
     }
     const token = user.generateAuthToken();
     return res.json({
@@ -57,20 +56,26 @@ const login = async (req, res) => {
 
 const register = async (req, res) => {
   const user = new UserModel(req.body);
-
+  console.log("adfasdf", user);
   try {
     if (res.home != null) {
       if (res.home.statusRegister === true) {
         res.status(400).json({ message: "Nhà đã được đăng ký tài khoản" });
-      }
-    } else {
+      } else {
+      console.log("111");
       const newUser = await user.save();
+      console.log("222");
       res.home.statusRegister = true;
+      res.home.statusUse = true;
       res.home.save();
       res.home = null;
       res.status(201).json(newUser);
+      } 
+    } else {
+      res.status(400).json({message: "Khong tim thay nha"});
     }
   } catch (err) {
+    console.log("loi dang ki");
     res.status(400).json({ message: err.message });
   }
 };
@@ -114,6 +119,7 @@ router.post("/", checkLogin, async (req, res) => {
     const newUser = await user.save();
     res.status(201).json(newUser);
   } catch (err) {
+    console.log("loi dang ki");
     res.status(400).json({ message: err.message });
   }
 });
@@ -166,8 +172,10 @@ async function getUser(req, res, next) {
 async function getHome(req, res, next) {
   let home;
   try {
-    if (req.body.home) {
-      home = await HomeModel.findById(req.body.home);
+    if (req.body.code) {
+      console.log(req.body);
+      home = await HomeModel.findOne({code: req.body.code});
+      console.log("dfalds", home);
       if (home == null) {
         return res.status(404).json({ message: "Cannot find home" });
       }
