@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 const UserSchema = new Schema({
   username: {
     type: String,
-    unique: true,
+    unique: false,
     required: true,
     trim: true,
   },
@@ -17,9 +17,9 @@ const UserSchema = new Schema({
   },
   email: {
     type: String,
-    unique: true,
-    required: true,
-    trim: true,
+    unique: false,
+    required: false,
+    trim: false,
   },
   name: {
     type: String,
