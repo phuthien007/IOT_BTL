@@ -54,11 +54,11 @@ router.patch("/:id", getRoom, async (req, res) => {
 });
 
 // setup endpoint delete room
-router.delete("/:id", getRoom, getAirbyRoom, async (req, res) => {
+router.delete("/:id", getRoom, async (req, res) => {
   try {
     // await res.light.remove();
     
-    await res.air.remove();
+    await res.room.remove();
     // await res.room.remove();
     res.json({ message: "Deleted Room" });
   } catch (err) {
