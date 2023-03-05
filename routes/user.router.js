@@ -17,6 +17,7 @@ const login = async (req, res) => {
     const user = await UserModel.findOne({
       username: uname,
     });
+    console.log(user);
     if (user == null) {
       return res.status(400).json({ message: "Cannot find user" });
     }
@@ -39,8 +40,9 @@ const login = async (req, res) => {
       return res.status(400).json({ message: "Wrong password" });
     }
     const token = user.generateAuthToken();
+    user.password = null;
     return res.json({
-      message: "Login successfully as admin",
+      message: "Login successfully ",
       data: {
         user,
         password: null,
@@ -54,12 +56,12 @@ const login = async (req, res) => {
 
 const register = async (req, res) => {
   const user = new UserModel(req.body);
-  console.log("adfasdf", user);
   try {
     if (res.home != null) {
       if (res.home.statusRegister === true) {
         res.status(400).json({ message: "Nhà đã được đăng ký tài khoản" });
       } else {
+        user.home = res.home._id;
         const newUser = await user.save();
         res.home.statusRegister = true;
         res.home.statusUse = true;
