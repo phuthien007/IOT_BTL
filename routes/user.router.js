@@ -3,8 +3,8 @@ const express = require("express");
 const UserModel = require("../models/user.server.model");
 const HomeModel = require("../models/home.server.model");
 const { checkLogin } = require("../middlewares");
-const { compare } = require('bcryptjs');
-const createError = require('http-errors');
+const { compare } = require("bcryptjs");
+const createError = require("http-errors");
 const bcrypt = require("bcryptjs");
 
 const router = express.Router();
@@ -13,7 +13,7 @@ const login = async (req, res) => {
   try {
     const uname = req.body.username;
     const pass = req.body.password;
-    const user = await UserModel.findOne({ 
+    const user = await UserModel.findOne({
       where: {
         username: uname,
       },
@@ -37,19 +37,17 @@ const login = async (req, res) => {
     // });
     const isCorrectPassword = await compare(pass, user.password);
     if (!isCorrectPassword) {
-      
       console.log(isCorrectPassword);
     }
     const token = user.generateAuthToken();
     return res.json({
-        message: 'Login successfully as admin',
-        data: {
-            user,
-            password: null,
-            token: token,
-        },
+      message: "Login successfully as admin",
+      data: {
+        user,
+        password: null,
+        token: token,
+      },
     });
-
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -62,13 +60,13 @@ const register = async (req, res) => {
     if (res.home != null) {
       if (res.home.statusRegister === true) {
         res.status(400).json({ message: "Nhà đã được đăng ký tài khoản" });
+      } else {
+        const newUser = await user.save();
+        res.home.statusRegister = true;
+        res.home.save();
+        res.home = null;
+        res.status(201).json(newUser);
       }
-    } else {
-      const newUser = await user.save();
-      res.home.statusRegister = true;
-      res.home.save();
-      res.home = null;
-      res.status(201).json(newUser);
     }
   } catch (err) {
     res.status(400).json({ message: err.message });
