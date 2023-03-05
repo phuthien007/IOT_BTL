@@ -3,8 +3,8 @@ const express = require("express");
 const UserModel = require("../models/user.server.model");
 const HomeModel = require("../models/home.server.model");
 const { checkLogin } = require("../middlewares");
-const { compare } = require('bcryptjs');
-const createError = require('http-errors');
+const { compare } = require("bcryptjs");
+const createError = require("http-errors");
 const bcrypt = require("bcryptjs");
 const { Console } = require("console");
 
@@ -14,8 +14,8 @@ const login = async (req, res) => {
   try {
     const uname = req.body.username;
     const pass = req.body.password;
-    const user = await UserModel.findOne({ 
-        username: uname,
+    const user = await UserModel.findOne({
+      username: uname,
     });
     if (user == null) {
       return res.status(400).json({ message: "Cannot find user" });
@@ -35,20 +35,18 @@ const login = async (req, res) => {
     // });
     const isCorrectPassword = await compare(pass, user.password);
     if (!isCorrectPassword) {
-      
       console.log(isCorrectPassword);
-      return res.status(400).json({message: "Wrong password"});
+      return res.status(400).json({ message: "Wrong password" });
     }
     const token = user.generateAuthToken();
     return res.json({
-        message: 'Login successfully as admin',
-        data: {
-            user,
-            password: null,
-            token: token,
-        },
+      message: "Login successfully as admin",
+      data: {
+        user,
+        password: null,
+        token: token,
+      },
     });
-
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -62,17 +60,16 @@ const register = async (req, res) => {
       if (res.home.statusRegister === true) {
         res.status(400).json({ message: "Nhà đã được đăng ký tài khoản" });
       } else {
-      console.log("111");
-      const newUser = await user.save();
-      console.log("222");
-      res.home.statusRegister = true;
-      res.home.statusUse = true;
-      res.home.save();
-      res.home = null;
-      res.status(201).json(newUser);
-      } 
+        const newUser = await user.save();
+        res.home.statusRegister = true;
+        res.home.statusUse = true;
+
+        res.home.save();
+        res.home = null;
+        res.status(201).json(newUser);
+      }
     } else {
-      res.status(400).json({message: "Khong tim thay nha"});
+      res.status(400).json({ message: "Khong tim thay nha" });
     }
   } catch (err) {
     console.log("loi dang ki");
@@ -174,7 +171,7 @@ async function getHome(req, res, next) {
   try {
     if (req.body.code) {
       console.log(req.body);
-      home = await HomeModel.findOne({code: req.body.code});
+      home = await HomeModel.findOne({ code: req.body.code });
       console.log("dfalds", home);
       if (home == null) {
         return res.status(404).json({ message: "Cannot find home" });

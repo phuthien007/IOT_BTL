@@ -9,7 +9,7 @@ require("./mqtt");
 var app = express();
 db();
 dotenv.config();
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 5000;
 // use the express-static middleware
 app.use(express.static("public"));
 app.use(express.json());
