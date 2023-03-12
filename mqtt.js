@@ -2,16 +2,16 @@ const mqtt = require("mqtt"); // require mq
 const client = mqtt.connect("mqtt://broker.hivemq.com:1883"); // create a client
 
 client.on("connect", function () {
-  client.subscribe("20194352in", function (err) {
+  client.subscribe("20194352", function (err) {
     if (!err) {
       console.log("Connected");
     }
   });
-});
-client.subscribe("fake", function (err) {
-  if (!err) {
-    console.log("Connected");
-  }
+  client.subscribe("fake", function (err) {
+    if (!err) {
+      console.log("Connected");
+    }
+  });
 });
 // create function random number min - max
 function randomIntFromInterval(min, max) {
