@@ -46,21 +46,25 @@ client.on("message", function (topic, message) {
 
   if (topic == "20194352") {
     if (message.length > 2) {
-      const jsonData = JSON.parse(message.toString());
-      // neu nhiet do lon hon 40 thi gui lenh sang arduino bat coi canh bao
+      try {
+        const jsonData = JSON.parse(message.toString());
+        // neu nhiet do lon hon 40 thi gui lenh sang arduino bat coi canh bao
 
-      if (jsonData?.type == 1) {
-        console.log("DH11", jsonData);
-        console.log("DH11", jsonData.temp);
-        if (jsonData.temp > 40) {
-          console.log("bat coi canh bao");
-          client.publish("20194352in", "2");
+        if (jsonData?.type == 1) {
+          console.log("DH11", jsonData);
+          console.log("DH11", jsonData.temp);
+          if (jsonData.temp > 40) {
+            console.log("bat coi canh bao");
+            client.publish("20194352in", "2");
+          }
+          // do am qua thap thi bat coi canh bao
+          else if (jsonData.humid < 20) {
+            console.log("bat coi canh bao");
+            client.publish("20194352in", "2");
+          }
         }
-        // do am qua thap thi bat coi canh bao
-        else if (jsonData.humid < 20) {
-          console.log("bat coi canh bao");
-          client.publish("20194352in", "2");
-        }
+      } catch (error) {
+        console.log(error);
       }
     } else {
       if (message.toString() == "1") {
